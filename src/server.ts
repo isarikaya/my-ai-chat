@@ -20,8 +20,8 @@ import { z } from "zod";
  * - Storage management with maxPersistedMessages
  */
 export class ChatAgent extends AIChatAgent {
-  // Keep the last 200 messages in SQLite storage
-  maxPersistedMessages = 200;
+  // Keep the last 100 messages in SQLite storage
+  maxPersistedMessages = 100;
 
   // Wait for MCP connections to restore after hibernation before processing messages
   waitForMcpConnections = true;
@@ -82,13 +82,17 @@ export class ChatAgent extends AIChatAgent {
           }),
           execute: async ({ city }) => {
             // In a real app, call a weather API
-            const conditions = ["sunny", "cloudy", "rainy", "snowy"];
+            const conditions = ["sunny", "cloudy", "rainy", "snowy", "hot"];
             const temp = Math.floor(Math.random() * 30) + 5;
+            let condition =
+              conditions[Math.floor(Math.random() * conditions.length)];
+            if (temp > 25) {
+              condition = "hot";
+            }
             return {
               city,
               temperature: temp,
-              condition:
-                conditions[Math.floor(Math.random() * conditions.length)],
+              condition,
               unit: "celsius"
             };
           }
